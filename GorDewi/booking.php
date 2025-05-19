@@ -25,56 +25,58 @@ if (isset($_POST['booking'])) {
 <html>
 <head>
     <title>Booking Lapangan</title>
-    <style>
-        .disabled { color: #999; font-style: italic; }
-        .enabled { font-weight: bold; }
-    </style>
+    <link rel="stylesheet" href="style/all.css">
+    <link rel="stylesheet" href="style/booking.css">
 </head>
 <body>
-    <h2>Form Booking Lapangan</h2>
+    <nav>
+        <div class="logo">Gor Dewi</div>
+        <ul>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="index.php#Lapangan">Lapangan</a></li>
+            <li><a href="booking.php">Booking</a></li>
+            <li>Profile</li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h2>Form Booking Lapangan</h2>
 
-    <form method="POST">
-        <!-- Tanggal -->
-        <label>Tanggal:</label><br>
-        <input type="date" id="tanggal" name="tanggal" required><br><br>
+        <form method="POST">
+            <label>Tanggal:</label>
+            <input type="date" id="tanggal" name="tanggal" required>
 
-        <!-- Jam Mulai -->
-        <label>Jam Mulai:</label><br>
-        <select id="jam_mulai" name="jam_mulai" required>
-            <option value="">-- Jam Mulai --</option>
-            <?php
-            for ($i = 7; $i <= 23; $i++) {
-                $jam = str_pad($i, 2, "0", STR_PAD_LEFT) . ":00";
-                echo "<option value='$jam'>$jam</option>";
-            }
-            ?>
-        </select><br><br>
+            <label>Jam Mulai:</label>
+            <select id="jam_mulai" name="jam_mulai" required>
+                <option value="">-- Jam Mulai --</option>
+                <?php
+                for ($i = 7; $i <= 23; $i++) {
+                    $jam = str_pad($i, 2, "0", STR_PAD_LEFT) . ":00";
+                    echo "<option value='$jam'>$jam</option>";
+                }
+                ?>
+            </select>
 
-        <!-- Jam Selesai -->
-        <label>Jam Selesai:</label><br>
-        <select id="jam_selesai" name="jam_selesai" required>
-            <option value="">-- Jam Selesai --</option>
-            <?php
-            for ($i = 8; $i <= 24; $i++) {
-                $jam = str_pad($i, 2, "0", STR_PAD_LEFT) . ":00";
-                echo "<option value='$jam'>$jam</option>";
-            }
-            ?>
-        </select><br><br>
+            <label>Jam Selesai:</label>
+            <select id="jam_selesai" name="jam_selesai" required>
+                <option value="">-- Jam Selesai --</option>
+                <?php
+                for ($i = 8; $i <= 24; $i++) {
+                    $jam = str_pad($i, 2, "0", STR_PAD_LEFT) . ":00";
+                    echo "<option value='$jam'>$jam</option>";
+                }
+                ?>
+            </select>
 
-        <!-- Tombol cek -->
-        <button type="button" onclick="cekKetersediaan()">Cek Ketersediaan</button><br><br>
+            <button type="button" onclick="cekKetersediaan()">Cek Ketersediaan</button>
 
-        <!-- Tempat dropdown lapangan -->
-        <div id="hasilCek"></div>
+            <div id="hasilCek"></div>
 
-        <!-- Nama pemesan -->
-        <br><label>Nama Pemesan:</label><br>
-        <input type="text" name="nama_pemesan" required><br><br>
+            <label>Nama Pemesan:</label>
+            <input type="text" name="nama_pemesan" required>
 
-        <!-- Tombol booking -->
-        <button type="submit" name="booking">Booking</button>
-    </form>
+            <button type="submit" name="booking">Booking</button>
+        </form>
+    </div>
 
     <script>
         function cekKetersediaan() {
@@ -99,4 +101,7 @@ if (isset($_POST['booking'])) {
         }
     </script>
 </body>
+<footer>
+        <p>By Kelompok 4</p>
+    </footer>
 </html>

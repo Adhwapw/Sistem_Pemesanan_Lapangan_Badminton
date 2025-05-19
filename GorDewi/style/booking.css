@@ -1,0 +1,72 @@
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.container h2 {
+    text-align: center;
+    color: #096B68;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+form label {
+    font-weight: bold;
+    color: #333;
+}
+
+form input[type="text"],
+form input[type="date"],
+form select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+form button[type="submit"],
+form button[type="button"] {
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    background-color: #096B68;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button[type="submit"]:hover,
+form button[type="button"]:hover {
+    background-color: #06514f;
+}
+
+#hasilCek {
+    font-size: 0.9em;
+    color: #555;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.disabled {
+    color: #aaa;
+    font-style: italic;
+}
+
+.enabled {
+    font-weight: bold;
+    color: #096B68;
+}
+

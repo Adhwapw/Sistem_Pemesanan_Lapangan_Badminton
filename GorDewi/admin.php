@@ -3,38 +3,36 @@
 <html>
 <head>
     <title>Admin Dashboard - GOR Dewi</title>
-    <style>
-        td.status-booked { color: blue; font-weight: bold; }
-td.status-selesai { color: green; font-weight: bold; }
-td.status-cancelled { color: red; font-weight: bold; }
-
-        body { font-family: sans-serif; margin: 0; padding: 20px; }
-        h2 { margin-top: 40px; }
-        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-        table, th, td { border: 1px solid #ccc; }
-        th, td { padding: 10px; text-align: center; }
-        form { margin-bottom: 20px; }
-        .btn { padding: 5px 10px; text-decoration: none; border-radius: 5px; }
-        .btn.edit { background-color: #2d89ef; color: white; }
-        .btn.hapus { background-color: #e81123; color: white; }
-        .btn.selesai { background-color: #107c10; color: white; }
-    </style>
+    <link rel="stylesheet" href="style/all.css">
+    <link rel="stylesheet" href="style/admin.css">
 </head>
 <body>
+    <nav>
+        <div class="logo">Gor Dewi</div>
+        <ul>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="index.php#Lapangan">Lapangan</a></li>
+            <li><a href="admin.php">Manage</a></li>
+            <li>Profile</li>
+        </ul>
+    </nav>
 
 <h1>Admin Dashboard - GOR Dewi</h1>
 
 <!-- ==================== BAGIAN 1: KELOLA LAPANGAN ==================== -->
 <h2>Kelola Lapangan</h2>
 
+<!-- Tombol Tambah Lapangan -->
+<button type="button" onclick="toggleTambahForm()" class="btn tambah">Tambah Lapangan</button>
+
 <!-- Form Tambah Lapangan -->
-<form method="POST">
+<form method="POST" id="formTambah" style="margin-top: 10px;">
     <input type="text" name="nama_lapangan" placeholder="Nama Lapangan" required>
     <select name="status_aktif">
         <option value="1">Aktif</option>
         <option value="0">Nonaktif</option>
     </select>
-    <button type="submit" name="tambah_lapangan">Tambah</button>
+    <button type="submit" name="tambah_lapangan" class="btn selesai">Simpan</button>
 </form>
 
 <!-- Tabel Lapangan -->
@@ -48,7 +46,20 @@ td.status-cancelled { color: red; font-weight: bold; }
     $lapangan = mysqli_query($conn, "SELECT * FROM lapangan");
     while($l = mysqli_fetch_assoc($lapangan)):
     ?>
-    <tr>
+    <tr id="row-<?= $l['id_lapangan'] ?>">
+        <td><?= $l['nama_lapangan'] ?></td>
+        <td><?= $l['status_aktif'] ? 'Aktif' : 'Nonaktif' ?></td>
+        <td>
+            <button type="button" class="btn edit" onclick="showEditForm(<?= $l['id_lapangan'] ?>)">Edit</button>
+            <form method="POST" style="display:inline;">
+                <input type="hidden" name="id_lapangan" value="<?= $l['id_lapangan'] ?>">
+                <button class="btn hapus" name="hapus_lapangan" onclick="return confirm('Yakin?')">Hapus</button>
+            </form>
+        </td>
+    </tr>
+
+    <!-- Baris Form Edit -->
+    <tr id="edit-form-<?= $l['id_lapangan'] ?>" style="display: none;">
         <form method="POST">
             <td>
                 <input type="text" name="nama" value="<?= $l['nama_lapangan'] ?>" required>
@@ -61,8 +72,7 @@ td.status-cancelled { color: red; font-weight: bold; }
                 </select>
             </td>
             <td>
-                <button class="btn edit" name="update_lapangan">Edit</button>
-                <button class="btn hapus" name="hapus_lapangan" onclick="return confirm('Yakin?')">Hapus</button>
+                <button class="btn selesai" name="update_lapangan">Simpan</button>
             </td>
         </form>
     </tr>
@@ -85,24 +95,36 @@ td.status-cancelled { color: red; font-weight: bold; }
         <td><?= $b['jam_mulai'] ?> - <?= $b['jam_selesai'] ?></td>
         <td class="status-<?= $b['status'] ?>"><?= $b['status'] ?></td>
         <td>
-    <?php if ($b['status'] == 'booked'): ?>
-        <form method="POST" style="display:inline;">
-            <input type="hidden" name="id_booking" value="<?= $b['id_booking'] ?>">
-            <button name="selesai_booking" class="btn selesai">Selesai</button>
-        </form>
-        <form method="POST" style="display:inline;">
-            <input type="hidden" name="id_booking" value="<?= $b['id_booking'] ?>">
-            <button name="batal_booking" class="btn hapus" >Cancel</button>
-        </form>
-    <?php endif; ?>
-</td>
+            <?php if ($b['status'] == 'booked'): ?>
+            <form method="POST" style="display:inline;">
+                <input type="hidden" name="id_booking" value="<?= $b['id_booking'] ?>">
+                <button name="selesai_booking" class="btn selesai">Selesai</button>
+            </form>
+            <form method="POST" style="display:inline;">
+                <input type="hidden" name="id_booking" value="<?= $b['id_booking'] ?>">
+                <button name="batal_booking" class="btn hapus">Cancel</button>
+            </form>
+            <?php endif; ?>
+        </td>
     </tr>
     <?php endwhile; ?>
 </table>
 
+<!-- ==================== SCRIPT SHOW/HIDE ==================== -->
+<script>
+    function toggleTambahForm() {
+        const form = document.getElementById("formTambah");
+        form.style.display = form.style.display === "none" ? "flex" : "none";
+    }
+
+    function showEditForm(id) {
+        document.getElementById("row-" + id).style.display = "none";
+        document.getElementById("edit-form-" + id).style.display = "table-row";
+    }
+</script>
+
 <!-- ==================== PHP ACTION HANDLING ==================== -->
 <?php
-// Tambah lapangan
 if (isset($_POST['tambah_lapangan'])) {
     $nama = $_POST['nama_lapangan'];
     $status = $_POST['status_aktif'];
@@ -110,7 +132,6 @@ if (isset($_POST['tambah_lapangan'])) {
     echo "<meta http-equiv='refresh' content='0'>";
 }
 
-// Edit lapangan
 if (isset($_POST['update_lapangan'])) {
     $id = $_POST['id_lapangan'];
     $nama = $_POST['nama'];
@@ -119,21 +140,18 @@ if (isset($_POST['update_lapangan'])) {
     echo "<meta http-equiv='refresh' content='0'>";
 }
 
-// Hapus lapangan
 if (isset($_POST['hapus_lapangan'])) {
     $id = $_POST['id_lapangan'];
     mysqli_query($conn, "DELETE FROM lapangan WHERE id_lapangan=$id");
     echo "<meta http-equiv='refresh' content='0'>";
 }
 
-// Ubah status booking jadi selesai
 if (isset($_POST['selesai_booking'])) {
     $id = $_POST['id_booking'];
     mysqli_query($conn, "UPDATE booking SET status='selesai' WHERE id_booking=$id");
     echo "<meta http-equiv='refresh' content='0'>";
 }
 
-// Batalkan booking
 if (isset($_POST['batal_booking'])) {
     $id = $_POST['id_booking'];
     mysqli_query($conn, "UPDATE booking SET status='cancelled' WHERE id_booking=$id");
@@ -141,4 +159,7 @@ if (isset($_POST['batal_booking'])) {
 }
 ?>
 </body>
+<footer>
+        <p>By Kelompok 4</p>
+    </footer>
 </html>

@@ -1,0 +1,47 @@
+h1 {
+    margin-top: 20px;
+    text-align: center;
+    color: #096B68;
+}
+
+h2 {
+    margin-top: 40px;
+    color: #096B68;
+}
+
+form {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#formTambah {
+    display: none;
+}
+
+input[type="text"], select {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+table{
+    border: #096B68;
+    color: #096B68;
+    background-color: white;
+    border-color: #096B68;
+}
+
+footer{
+    margin-top: 40px;
+}
+
+.tambah{    
+    background-color: #096B68;
+    color: white;
+}
+td.status-booked { color: blue; font-weight: bold; }
+td.status-selesai { color: green; font-weight: bold; }
+td.status-cancelled { color: red; font-weight: bold; }
+
