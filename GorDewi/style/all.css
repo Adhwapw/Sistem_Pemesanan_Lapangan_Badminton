@@ -66,6 +66,16 @@ th, td {
     text-align: center;
 }
 
+.status-cancelled {
+    color: red;
+    font-weight: bold;
+}
+
+.status-rejected {
+    color: orange;
+    font-weight: bold;
+}
+
 footer {
     background: #129990;
     color: white;

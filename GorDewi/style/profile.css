@@ -1,0 +1,127 @@
+.profile-container {
+    max-width: 400px;
+    margin: 40px auto;
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.logout-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 20px;
+    background-color: #e81123;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+.logout-btn:hover {
+    background-color: #b60d1b;
+}
+
+.booking-history {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.booking-history h3 {
+    color: #096B68;
+    margin-bottom: 15px;
+}
+
+/* Modal overlay */
+.modal {
+    display: none; /* default hidden */
+    position: fixed;
+    z-index: 9999; /* di atas semua */
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5); /* semi transparent */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Konten modal */
+.modal-content {
+    background: white;
+    padding: 25px 30px;
+    border-radius: 12px;
+    max-width: 320px;
+    width: 90%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.modal-content p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #096B68; /* warna tema */
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.modal-buttons .btn {
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    min-width: 100px;
+    transition: background-color 0.3s;
+}
+
+.btn.selesai {
+    background-color: #096B68;
+    color: white;
+}
+
+.btn.selesai:hover {
+    background-color: #0c8a7b;
+}
+
+.btn.cancel {
+    background-color: #ccc;
+    color: #333;
+}
+
+.btn.cancel:hover {
+    background-color: #bbb;
+}
+
+
+.admin-box button:hover {
+    background-color: #2f855a;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

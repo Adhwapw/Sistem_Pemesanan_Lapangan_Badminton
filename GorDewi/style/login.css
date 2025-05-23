@@ -1,0 +1,59 @@
+.login-container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.login-container h2 {
+    text-align: center;
+    color: #096B68;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+form label {
+    font-weight: bold;
+    color: #333;
+}
+
+form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    width: 100%;
+}
+
+form button {
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    background-color: #096B68;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #06514f;
+}
+
+.daftar-link {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.daftar-link a {
+    color: #096B68;
+    text-decoration: none;
+    font-weight: bold;
+}

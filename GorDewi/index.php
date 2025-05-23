@@ -1,53 +1,60 @@
-<?php include 'koneksi.php'; ?>
+<?php
+session_start();
+include 'koneksi.php';
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    $query = mysqli_query($conn, "SELECT * FROM users WHERE email = '$email'");
+    $data = mysqli_fetch_assoc($query);
+
+    // Cek password biasa, tanpa hash
+    if ($data && $password === $data['password']) {
+        // Set session
+        $_SESSION['id_users'] = $data['id_users']; // atau sesuaikan kolom id
+        $_SESSION['user_nama'] = $data['nama_lengkap'];
+        $_SESSION['user_email'] = $data['email'];
+        $_SESSION['user_foto'] = $data['foto_profil'];
+        $_SESSION['user_role'] = $data['role'];
+
+        // Redirect berdasarkan role
+        if ($data['role'] === 'admin') {
+            header("Location: admin/admin.php");
+        } else {
+            header("Location: user/home.php");
+        }
+        exit;
+    } else {
+        echo "<script>alert('Email atau password salah!'); window.location='index.php';</script>";
+    }
+}
+?>
+
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gor Dewi</title>
+    <title>Login</title>
     <link rel="stylesheet" href="style/all.css">
-    <link rel="stylesheet" href="style/home.css">
+    <link rel="stylesheet" href="style/login.css">
 </head>
+
 <body>
-    <nav>
-        <div class="logo">Gor Dewi</div>
-        <ul>
-            <li><a href="index.php">Home</a></li>
-            <li><a href="#Lapangan">Lapangan</a></li>
-            <li><a href="booking.php">Booking</a></li>
-            <li>Profile</li>
-        </ul>
-    </nav>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form method="POST">
+            <label>Email</label>
+            <input type="email" name="email" required>
 
-    <section class="hero">
-        <img src="assets/home-page.jpg" alt="Background" class="hero-bg">
-        <div class="hero-content">
-            <h1>Selamat Datang</h1>
-            <h3>di Website Gor Dewi</h3>
-        </div>
-    </section>
+            <label>Password</label>
+            <input type="password" name="password" required>
 
-    <section class="lapangan-section" id="Lapangan">
-        <h2>Daftar Lapangan</h2>
-        <div class="lapangan-container">
-            <?php
-            $data = mysqli_query($conn, "SELECT * FROM lapangan");
-            while($d = mysqli_fetch_array($data)) {
-                $status_lapangan = $d['status_aktif'] == 1 ? 'Aktif' : 'Tidak Aktif';
-                echo "
-                <div class='lapangan-card'>
-                    <img src='assets/lapangan_badminton.jpg' alt='Lapangan'>
-                    <div class='nama'>{$d['nama_lapangan']}</div>
-                    <div class='status {$status_lapangan}'>{$status_lapangan}</div>
-                </div>
-                ";
-            }
-            ?>
-        </div>
-    </section>
-
-    <footer>
-        <p>By Kelompok 4</p>
-    </footer>
+            <button type="submit" name="login">Masuk</button>
+        </form>
+        <p class="daftar-link">Belum punya akun? <a href="register.php">Daftar di sini</a></p>
+    </div>
 </body>
+
 </html>

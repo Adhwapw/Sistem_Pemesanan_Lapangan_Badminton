@@ -1,0 +1,103 @@
+.admin-box {
+    display: none;
+    background: #ffffff;
+    padding: 25px 30px;
+    max-width: 500px;
+    margin: 20px auto;
+    border-radius: 12px;
+    border: 1px solid #ccc; 
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.admin-box.show {
+    display: block;
+}
+
+.admin-box h3 {
+    font-size: 20px;
+    color: #096B68;  
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.admin-box form input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.admin-box form input:focus {
+    border-color: #096B68;
+    outline: none;
+}
+
+.admin-box button {
+    width: 100%;
+    padding: 12px;
+    background-color: #096B68;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+}
+
+.admin-box button:hover {
+    background-color: #0c8a7b;  
+}
+
+.btn-group {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.logout-btn {
+    background-color: #e81123;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #b60d1b;
+}
+
+.selesai {
+    background-color: #096B68;
+    color: white;
+    margin-top: 15px;
+    padding: 8px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.selesai:hover {
+    background-color: #0c8a7b;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
