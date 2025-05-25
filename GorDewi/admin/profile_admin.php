@@ -19,11 +19,21 @@ if (isset($_POST['tambah_admin'])) {
 
     $cek = mysqli_query($conn, "SELECT * FROM users WHERE email = '$email'");
     if (mysqli_num_rows($cek) > 0) {
-        echo "<script>alert('Email sudah terdaftar!');</script>";
+        echo "<script>window.onload = () => alert('Email sudah terdaftar!');</script>";
     } else {
-        mysqli_query($conn, "INSERT INTO users (nama_lengkap, email, password, role) VALUES ('$nama', '$email', '$password', 'admin')");
-        echo "<script>alert('Admin berhasil ditambahkan!'); window.location='profile_admin.php';</script>";
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        mysqli_query($conn, "INSERT INTO users (nama_lengkap, email, password, role) VALUES ('$nama', '$email', '$hashedPassword', 'admin')");
+        $_SESSION['success_message'] = 'Admin berhasil ditambahkan!';
+        header("Location: profile_admin.php");
+        exit;
     }
+}
+
+// Ambil pesan sukses dari session (flash message) lalu hapus supaya muncul sekali saja
+$successMessage = '';
+if (isset($_SESSION['success_message'])) {
+    $successMessage = $_SESSION['success_message'];
+    unset($_SESSION['success_message']);
 }
 ?>
 
@@ -33,14 +43,33 @@ if (isset($_POST['tambah_admin'])) {
 <head>
     <title>Profil Admin</title>
     <link rel="stylesheet" href="../style/all.css">
-    <link rel="stylesheet" href="../style/profile.css">
     <link rel="stylesheet" href="../style/tambah_admin.css">
+
     <script>
+        function showSuccessModal(message) {
+            const modal = document.getElementById('successModal');
+            const messageElement = document.getElementById('successMessage');
+            messageElement.textContent = message;
+            modal.style.display = 'flex';
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').style.display = 'none';
+        }
+
+        // Jika klik di luar kotak modal, tutup modal
+        window.addEventListener('click', function (e) {
+            const modal = document.getElementById('successModal');
+            if (e.target === modal) {
+                closeSuccessModal();
+            }
+        });
+
         function toggleAdminForm() {
             const form = document.querySelector('.admin-box');
             form.classList.toggle('show');
         }
-        
+
         document.addEventListener('DOMContentLoaded', () => {
             const logoutBtn = document.querySelector('.logout-btn');
             const modal = document.getElementById('logoutModal');
@@ -67,13 +96,17 @@ if (isset($_POST['tambah_admin'])) {
                     modal.style.display = 'none';
                 }
             });
+
+            // Tampilkan modal sukses jika ada pesan sukses dari PHP
+            <?php if ($successMessage): ?>
+                showSuccessModal("<?= addslashes($successMessage) ?>");
+            <?php endif; ?>
         });
     </script>
 
 </head>
 
 <body>
-
     <nav>
         <div class="logo">Gor Dewi</div>
         <ul>
@@ -86,10 +119,10 @@ if (isset($_POST['tambah_admin'])) {
 
     <!-- Card Profil Admin -->
     <div class="profile-container">
-        <img src="<?= $user['foto_profil'] ?>" class="profile-photo" alt="Foto Profil">
+        <img src="<?= htmlspecialchars($user['foto_profil']) ?>" class="profile-photo" alt="Foto Profil">
         <h2>Admin</h2>
-        <h2><?= $user['nama_lengkap'] ?></h2>
-        <p><?= $user['email'] ?></p>
+        <h2><?= htmlspecialchars($user['nama_lengkap']) ?></h2>
+        <p><?= htmlspecialchars($user['email']) ?></p>
         <div class="btn-group">
             <a href="../logout.php" class="btn logout-btn">Logout</a>
             <button class="btn selesai" onclick="toggleAdminForm()">Tambah Admin</button>
@@ -97,9 +130,9 @@ if (isset($_POST['tambah_admin'])) {
     </div>
 
     <!-- Box Tambah Admin (Hidden by Default) -->
-    <div class="admin-box" id="formTambahAdmin">
+    <div class="admin-box" id="formTambahAdmin" style="display:none;">
         <h3>Tambah Admin Baru</h3>
-        <form method="POST">
+        <form method="POST" action="">
             <input type="text" name="nama" placeholder="Nama Lengkap" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
@@ -107,6 +140,7 @@ if (isset($_POST['tambah_admin'])) {
         </form>
     </div>
 
+    <!-- Modal Logout -->
     <div id="logoutModal" class="modal">
         <div class="modal-content">
             <p>Yakin ingin logout?</p>
@@ -116,6 +150,27 @@ if (isset($_POST['tambah_admin'])) {
             </div>
         </div>
     </div>
+
+    <!-- Modal Success -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <p id="successMessage">Admin berhasil ditambahkan!</p>
+            <div class="modal-buttons">
+                <button onclick="closeSuccessModal()" class="btn selesai">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAdminForm() {
+            const form = document.getElementById('formTambahAdmin');
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+            } else {
+                form.style.display = 'none';
+            }
+        }
+    </script>
 
 </body>
 

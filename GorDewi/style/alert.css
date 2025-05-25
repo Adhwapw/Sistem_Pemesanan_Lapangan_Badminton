@@ -1,0 +1,82 @@
+/* Modal umum */
+.modal,
+#custom-alert {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    overflow: auto; /* hanya perlu jika modal bisa tinggi melebihi layar */
+}
+
+/* Tampilkan saat show */
+.modal.show,
+#custom-alert.show {
+    display: flex;
+}
+
+/* Konten modal & alert */
+.modal-content,
+.custom-alert-box {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+/* Ukuran berbeda untuk alert box */
+.custom-alert-box {
+    padding: 25px;
+    max-width: 300px;
+}
+
+/* Tombol di dalam modal */
+.modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Warna garis untuk tipe modal */
+.modal-content.success {
+    border: 3px solid #28a745;
+}
+
+.modal-content.error {
+    border: 3px solid #dc3545;
+}
+
+/* Tombol default */
+.btn.selesai,
+.custom-alert-box button {
+    padding: 8px 20px;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #ff4d4d;
+}
+
+/* Khusus tombol "selesai" */
+.btn.selesai {
+    background-color: #096B68;
+}
+
+/* Hover alert */
+.custom-alert-box button:hover {
+    background-color: #e60000;
+}
+
+.custom-alert-box p {
+    margin-bottom: 15px;
+}

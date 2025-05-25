@@ -14,7 +14,7 @@ $user = mysqli_fetch_assoc($result);
 // Handle pembatalan booking
 if (isset($_POST['ajukan_cancel'])) {
     $id_booking = $_POST['id_booking'];
-    mysqli_query($conn, "UPDATE booking SET status='pending_cancel' WHERE id_booking = $id_booking");
+    mysqli_query($conn, "UPDATE booking SET status='menunggu_pembatalan' WHERE id_booking = $id_booking");
     echo "<meta http-equiv='refresh' content='0'>";
 }
 
@@ -42,6 +42,35 @@ if ($_SESSION['user_role'] === 'user') {
 </head>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Modal pembatalan
+        const cancelModal = document.getElementById('cancelModal');
+        const confirmCancelBtn = document.getElementById('confirmCancel');
+        const cancelCancelBtn = document.getElementById('cancelCancel');
+        cancelModal.style.display = 'none';
+
+        let currentForm = null;
+
+        // Event klik tombol ajukan pembatalan
+        document.querySelectorAll('.ajukan_cancel').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentForm = btn.closest('form'); // ambil form terkait tombol itu
+                cancelModal.style.display = 'flex'; // tampilkan modal
+            });
+        });
+
+        cancelCancelBtn.addEventListener('click', () => {
+            cancelModal.style.display = 'none'; // tutup modal
+            currentForm = null;
+        });
+
+        confirmCancelBtn.addEventListener('click', () => {
+            if (currentForm) {
+                currentForm.submit(); // submit form jika sudah konfirmasi
+            }
+        });
+    });
+    document.addEventListener('DOMContentLoaded', () => {
         const logoutBtn = document.querySelector('.logout-btn');
         const modal = document.getElementById('logoutModal');
         const confirmLogout = document.getElementById('confirmLogout');
@@ -61,7 +90,7 @@ if ($_SESSION['user_role'] === 'user') {
             window.location.href = logoutBtn.href; // lanjut logout
         });
 
-        // Optional: klik di luar modal-content tutup modal
+        // klik di luar modal-content tutup modal
         window.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.style.display = 'none';
@@ -110,10 +139,13 @@ if ($_SESSION['user_role'] === 'user') {
                                 <?php if ($item['status'] === 'booked') : ?>
                                     <form method="POST" style="display:inline;">
                                         <input type="hidden" name="id_booking" value="<?= $item['id_booking'] ?>">
-                                        <button type="submit" name="ajukan_cancel" class="btn cancel">Ajukan Pembatalan</button>
+                                        <input type="hidden" name="ajukan_cancel" value="1">
+                                        <button type="button" class="btn cancel ajukan_cancel">Ajukan Pembatalan</button>
                                     </form>
-                                <?php elseif ($item['status'] === 'pending_cancel') : ?>
+                                <?php elseif ($item['status'] === 'menunggu_pembatalan') : ?>
                                     <em>Menunggu konfirmasi admin</em>
+                                <?php elseif ($item['status'] === 'belum_dibayar') : ?>
+                                    <a href="../user/pembayaran.php?id_booking=<?= $item['id_booking'] ?>" class="btn bayar">Bayar</a>
                                 <?php else : ?>
                                     -
                                 <?php endif; ?>
@@ -124,6 +156,16 @@ if ($_SESSION['user_role'] === 'user') {
             <?php else : ?>
                 <p>Belum ada riwayat booking.</p>
             <?php endif; ?>
+        </div>
+        <!-- Modal Konfirmasi Pembatalan -->
+        <div id="cancelModal" class="modal">
+            <div class="modal-content">
+                <p>Yakin ingin mengajukan pembatalan booking ini?</p>
+                <div class="modal-buttons">
+                    <button id="confirmCancel" class="btn selesai">Ya, Ajukan</button>
+                    <button id="cancelCancel" class="btn cancel">Batal</button>
+                </div>
+            </div>
         </div>
         <div id="logoutModal" class="modal">
             <div class="modal-content">

@@ -15,13 +15,15 @@ while ($l = mysqli_fetch_assoc($lapangan)) {
 
     // Cek apakah waktu tabrakan
     $cek = mysqli_query($conn, "
-        SELECT * FROM booking
-        WHERE id_lapangan = $id
-        AND tanggal = '$tanggal'
-        AND (
-            (jam_mulai < '$jam_selesai' AND jam_selesai > '$jam_mulai')
-        )
-    ");
+    SELECT * FROM booking
+    WHERE id_lapangan = $id
+    AND tanggal = '$tanggal'
+    AND status NOT IN ('cancelled', 'pending_cancel')
+    AND (
+        (jam_mulai < '$jam_selesai' AND jam_selesai > '$jam_mulai')
+    )
+");
+
 
     $tersedia = mysqli_num_rows($cek) === 0;
 
@@ -32,4 +34,3 @@ while ($l = mysqli_fetch_assoc($lapangan)) {
 }
 
 echo "</select>";
-?>

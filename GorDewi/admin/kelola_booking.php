@@ -26,6 +26,7 @@
             <th>Tanggal</th>
             <th>Jam</th>
             <th>Status</th>
+            <th>Status Pembayaran</th>
             <th>Aksi</th>
         </tr>
         <?php
@@ -37,6 +38,7 @@
                 <td><?= $b['tanggal'] ?></td>
                 <td><?= $b['jam_mulai'] ?> - <?= $b['jam_selesai'] ?></td>
                 <td class="status-<?= $b['status'] ?>"><?= $b['status'] ?></td>
+                <td><?= $b['status_pembayaran'] ?></td>
                 <td>
                     <?php if ($b['status'] == 'booked'): ?>
                         <form method="POST" style="display:inline;">
@@ -47,7 +49,7 @@
                             <input type="hidden" name="id_booking" value="<?= $b['id_booking'] ?>">
                             <button name="batal_booking" class="btn hapus">Cancel</button>
                         </form>
-                    <?php elseif ($b['status'] == 'pending_cancel'): ?>
+                    <?php elseif ($b['status'] == 'menunggu_pembatalan'): ?>
                         <form method="POST" style="display:inline;">
                             <input type="hidden" name="id_booking" value="<?= $b['id_booking'] ?>">
                             <button name="setujui_cancel" class="btn selesai">Setujui Batal</button>
@@ -67,7 +69,7 @@
     <?php
     if (isset($_POST['selesai_booking'])) {
         $id = $_POST['id_booking'];
-        mysqli_query($conn, "UPDATE booking SET status='selesai' WHERE id_booking=$id");
+        mysqli_query($conn, "UPDATE booking SET status='selesai', status_pembayaran='LUNAS' WHERE id_booking=$id");
         echo "<meta http-equiv='refresh' content='0'>";
     }
 

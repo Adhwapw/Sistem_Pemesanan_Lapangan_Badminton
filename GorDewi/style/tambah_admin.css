@@ -1,3 +1,4 @@
+/* ========== ADMIN BOX ========== */
 .admin-box {
     display: none;
     background: #ffffff;
@@ -5,7 +6,7 @@
     max-width: 500px;
     margin: 20px auto;
     border-radius: 12px;
-    border: 1px solid #ccc; 
+    border: 1px solid #ccc;
     animation: fadeIn 0.3s ease-in-out;
 }
 
@@ -15,7 +16,7 @@
 
 .admin-box h3 {
     font-size: 20px;
-    color: #096B68;  
+    color: #096B68;
     margin-bottom: 20px;
     text-align: center;
 }
@@ -49,9 +50,10 @@
 }
 
 .admin-box button:hover {
-    background-color: #0c8a7b;  
+    background-color: #0c8a7b;
 }
 
+/* ========== BUTTON GROUP ========== */
 .btn-group {
     margin-top: 20px;
     display: flex;
@@ -59,7 +61,9 @@
     justify-content: center;
 }
 
+/* ========== LOGOUT BUTTON ========== */
 .logout-btn {
+    display: inline-block;
     background-color: #e81123;
     color: white;
     padding: 10px 25px;
@@ -68,12 +72,14 @@
     text-decoration: none;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-top: 15px;
 }
 
 .logout-btn:hover {
     background-color: #b60d1b;
 }
 
+/* ========== SELESAI BUTTON ========== */
 .selesai {
     background-color: #096B68;
     color: white;
@@ -90,12 +96,67 @@
     background-color: #0c8a7b;
 }
 
+/* ========== PROFILE CONTAINER ========== */
+.profile-container {
+    max-width: 400px;
+    margin: 40px auto;
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+/* ========== MODAL ========== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* ========== ANIMATION ========== */
 @keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(20px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
