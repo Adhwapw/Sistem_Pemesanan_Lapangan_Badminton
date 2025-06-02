@@ -3,11 +3,17 @@ session_start();
 include '../koneksi.php';
 require_once '../vendor/autoload.php';
 
+// Set config Midtrans di awal
+\Midtrans\Config::$serverKey = 'SB-Mid-server-OgQBd753BSBDy8TnqyIR6ImC';
+\Midtrans\Config::$isProduction = false;
+
+// Cek user sudah login
 if (!isset($_SESSION['id_users'])) {
     echo "<script>alert('Silakan login terlebih dahulu'); window.location.href='../index.php';</script>";
     exit;
 }
 
+// Cek ada id_booking
 if (!isset($_GET['id_booking'])) {
     echo "<script>alert('ID Booking tidak ditemukan!'); window.location.href='../user/profile_user.php';</script>";
     exit;
@@ -16,11 +22,11 @@ if (!isset($_GET['id_booking'])) {
 $id_booking = $_GET['id_booking'];
 $id_user = $_SESSION['id_users'];
 
-// Ambil data booking
+// Ambil data booking dari database
 $sql = "SELECT b.*, l.nama_lapangan 
         FROM booking b 
         JOIN lapangan l ON b.id_lapangan = l.id_lapangan 
-        WHERE b.id_booking = '$id_booking' AND b.id_users = '$id_user' AND l.id_lapangan";
+        WHERE b.id_booking = '$id_booking' AND b.id_users = '$id_user'";
 $result = mysqli_query($conn, $sql);
 
 if (mysqli_num_rows($result) === 0) {
@@ -30,7 +36,7 @@ if (mysqli_num_rows($result) === 0) {
 
 $data = mysqli_fetch_assoc($result);
 
-// Hitung total bayar
+// Fungsi hitung total bayar
 function hitungTotalBayar($mulai, $selesai, $metode) {
     $start = intval(substr($mulai, 0, 2));
     $end = intval(substr($selesai, 0, 2));
@@ -55,9 +61,7 @@ function hitungTotalBayar($mulai, $selesai, $metode) {
 $totalBayar = hitungTotalBayar($data['jam_mulai'], $data['jam_selesai'], $data['status_pembayaran']);
 $nama_lapangan = $data['nama_lapangan'];
 
-\Midtrans\Config::$serverKey = 'SB-Mid-server-OgQBd753BSBDy8TnqyIR6ImC';
-\Midtrans\Config::$isProduction = false;
-
+// Ambil data user
 $user_result = mysqli_query($conn, "SELECT * FROM users WHERE id_users = '$id_user'");
 $data_user = mysqli_fetch_assoc($user_result);
 
@@ -66,7 +70,25 @@ $email_user = $data_user['email'];
 
 $order_id = 'BOOK-' . $id_booking;
 
-// Langsung generate snap token setiap kali (tidak menyimpan ke database)
+// Cek status transaksi di Midtrans (handle error jika transaksi belum ada)
+try {
+    /** @var \Midtrans\TransactionStatus|mixed $status */
+    $status = \Midtrans\Transaction::status($order_id);
+
+    if (is_object($status) && isset($status->transaction_status)) {
+        if ($status->transaction_status === 'settlement' || $status->transaction_status === 'capture') {
+            // Update status pembayaran di database jika sudah lunas
+            mysqli_query($conn, "UPDATE booking SET status = 'booked' WHERE id_booking = '$id_booking'");
+
+            echo "<script>alert('Booking ini sudah dibayar.'); window.location.href='../user/profile_user.php';</script>";
+            exit;
+        }
+    }
+} catch (Exception $e) {
+    // Jika transaksi belum ada di Midtrans, lanjut ke proses pembayaran
+}
+
+// Generate snap token untuk Midtrans
 $params = [
     'transaction_details' => [
         'order_id' => $order_id,
@@ -100,10 +122,10 @@ $snapToken = \Midtrans\Snap::getSnapToken($params);
 
 <div class="container">
     <h2>Konfirmasi Pembayaran</h2>
-    <p><strong>Lapangan:</strong> <?= $nama_lapangan ?></p>
-    <p><strong>Tanggal:</strong> <?= $data['tanggal'] ?></p>
-    <p><strong>Jam:</strong> <?= $data['jam_mulai'] ?> - <?= $data['jam_selesai'] ?></p>
-    <p><strong>Status Pembayaran:</strong> <?= $data['status_pembayaran'] ?></p>
+    <p><strong>Lapangan:</strong> <?= htmlspecialchars($nama_lapangan) ?></p>
+    <p><strong>Tanggal:</strong> <?= htmlspecialchars($data['tanggal']) ?></p>
+    <p><strong>Jam:</strong> <?= htmlspecialchars($data['jam_mulai']) ?> - <?= htmlspecialchars($data['jam_selesai']) ?></p>
+    <p><strong>Status Pembayaran:</strong> <?= htmlspecialchars($data['status_pembayaran']) ?></p>
     <p><strong>Total Bayar:</strong> Rp <?= number_format($totalBayar, 0, ',', '.') ?></p>
 
     <button id="pay-button">Bayar Sekarang</button>
